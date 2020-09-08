@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskViewer</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+<body>
+<header th:insert="fragments/layout.html :: header"> </header>
+<div class="py-3">
+<div class="container my-3 p-3 bg-white box-shadow">
+    <h2 th:text="${title}" class="border-bottom border-gray pb-2 mb-0">Tareas</h2>
+    <form th:action="${action} == 'allTasks' ? @{/tasks} : @{/tasks/user/}+${idUser}" class="form-inline pt-3 pb-3 mb-0 lh-125 border-bottom border-gray">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input id="txtSearch" name="keyword" class="form-control form-control ml-3 w-50 rounded-0" type="text" placeholder="Buscar por título o responsable"
+               aria-label="Buscar">
+        <a class="btn btn-secondary px-4 rounded-0 ml-auto" th:href="@{/tasks/add}" role="button">Nueva tarea</a>
+    </form>
+
+    <div th:each="task: ${tasks}"  class="media text-muted pt-3">
+        <img th:src="@{/icons/{icon}.png(icon=${task.status.referenceIcon})}" alt="48x48" class="mr-2 rounded" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1745a651075%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1745a651075%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2212.03125%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 48px; height: 48px;">
+        <div class="media-body pb-3 pl-2 mb-0 lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <strong th:text="${task.title}" class="text-gray-dark"></strong>
+                <a class="text-dark" th:href="@{/tasks/edit/{id}(id=${task.id})}">Editar</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <span th:text="${task.description}" class="text-gray-dark"></span>
+                <a class="text-danger" th:href="@{/deleteTask/(id=${task.id})}"
+                   onclick="return confirm('Estás seguro de querer eliminar la tarea?');">Eliminar</a>
+            </div>
+            <a th:href="@{/tasks/user/{id}(id=${task.user.id})}" th:text="'@' + ${task.user.name} + ${task.user.lastname}" class="d-block">@username</a>
+        </div>
+    </div>
+</div>
+</div>
+<footer th:insert="fragments/layout.html :: footer"> </footer>
+</body>
+</html>
